@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var blobId = new URLSearchParams(window.location.pathname);
     
     // JSONBlob'dan ID'ye göre içeriği almak için URL oluşturuyoruz.
-    var apiUrl = `https://jsonblob.com/api/jsonBlob${blobId}`;
+    var apiUrl = `https://jsonblob.com/api/jsonBlob/${blobId}`;
     
     fetch(apiUrl)
     .then(response => {
