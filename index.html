@@ -37,7 +37,7 @@ document.getElementById('uploadButton').addEventListener('click', function() {
 });
 
 function uploadToJSONBlob(content) {
-    var apiUrl = 'https://fastimg.dvtfl.xyz';
+    var apiUrl = 'https://jsonblob.com/api/Blob/';
     var jsonData = { "content": content };
 
     fetch(apiUrl, {
@@ -58,7 +58,8 @@ function uploadToJSONBlob(content) {
         }
     })
     .then(blobId => {
-        document.getElementById('result').innerHTML = 'Resim başarıyla yüklendi. <br> JSONBlob ID: <a href="' + apiUrl + '/' + blobId + '" target="_blank">' + blobId + '</a>';
+        document.getElementById('result').innerHTML = 'Resim başarıyla yüklendi. <br> linkiniz: <a href="http://fastimg.dvtfl.xyz/' + blobId + '" target="_blank">' + blobId + '</a>';
+
     })
     .catch(error => {
         document.getElementById('result').innerHTML = 'Hata oluştu: ' + error.message;
