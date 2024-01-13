@@ -11,7 +11,11 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    var blobId = new URLSearchParams(window.location.pathname);
+    // Örnek olarak URL'den bir blob ID alalım (Bu kısmı ihtiyacınıza göre düzenleyin)
+    var pathname = window.location.pathname;
+    
+    // Örnek olarak URL'den alınan path'i kullanarak blob ID'yi çıkaralım
+    var blobId = pathname.split('/').pop(); // URL'den son parçayı alıyoruz
     
     // JSONBlob'dan ID'ye göre içeriği almak için URL oluşturuyoruz.
     var apiUrl = `https://jsonblob.com/api/jsonBlob/${blobId}`;
