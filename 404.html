@@ -1,5 +1,3 @@
-<!-- display.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,8 +14,8 @@ document.addEventListener('DOMContentLoaded', function() {
     var urlParams = new URLSearchParams(window.location.search);
     var blobId = urlParams.get('id');
     
-    // JSONBlob'dan ID'ye göre içeriği almak için örnek bir URL oluşturuyoruz.
-    var apiUrl = `https://jsonblob.com/api/jsonBlob/${blobId}`;
+    // JSONBlob'dan ID'ye göre içeriği almak için URL oluşturuyoruz.
+    var apiUrl = `https://jsonblob.com/api/jsonBlob${blobId}`;
     
     fetch(apiUrl)
     .then(response => {
