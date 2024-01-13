@@ -1,0 +1,44 @@
+<!-- display.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Resim Görüntüleme</title>
+</head>
+<body>
+
+<h2>Yüklenen Resim</h2>
+<img id="uploadedImage" alt="Yüklenen Resim" src="" />
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var urlParams = new URLSearchParams(window.location.search);
+    var blobId = urlParams.get('id');
+    
+    // JSONBlob'dan ID'ye göre içeriği almak için örnek bir URL oluşturuyoruz.
+    var apiUrl = `https://jsonblob.com/api/jsonBlob/${blobId}`;
+    
+    fetch(apiUrl)
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error('Hata: ' + response.statusText);
+        }
+    })
+    .then(data => {
+        // 'content' anahtarının değerini alıyoruz.
+        var base64Content = data.content;
+        
+        var imgElement = document.getElementById('uploadedImage');
+        imgElement.src = `data:image/png;base64,${base64Content}`;
+    })
+    .catch(error => {
+        console.error("Hata:", error);
+    });
+});
+</script>
+
+</body>
+</html>
