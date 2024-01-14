@@ -1,45 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Resim Görüntüleme</title>
+    <meta charset="UTF-8">
+    <title>Resim Görüntüleme</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        #uploadedImage {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid #333;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
 <body>
 
-<h2>Yüklenen Resim</h2>
-<img id="uploadedImage" alt="Yüklenen Resim" src="" />
+    <h2>Yüklenen Resim</h2>
+    <img id="uploadedImage" alt="Yüklenen Resim" src="" />
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Örnek olarak URL'den bir blob ID alalım (Bu kısmı ihtiyacınıza göre düzenleyin)
-    var pathname = window.location.pathname;
-    
-    // Örnek olarak URL'den alınan path'i kullanarak blob ID'yi çıkaralım
-    var blobId = pathname.split('/').pop(); // URL'den son parçayı alıyoruz
-    
-    // JSONBlob'dan ID'ye göre içeriği almak için URL oluşturuyoruz.
-    var apiUrl = `https://jsonblob.com/api/jsonBlob/${blobId}`;
-    
-    fetch(apiUrl)
-    .then(response => {
-        if (response.ok) {
-            return response.json();
-        } else {
-            throw new Error('Hata: ' + response.statusText);
-        }
-    })
-    .then(data => {
-        // 'content' anahtarının değerini alıyoruz.
-        var base64Content = data.content;
-        
-        var imgElement = document.getElementById('uploadedImage');
-        imgElement.src = `data:image/png;base64,${base64Content}`;
-    })
-    .catch(error => {
-        console.error("Hata:", error);
-    });
-});
-</script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var pathname = window.location.pathname;
+            var blobId = pathname.split('/').pop();
+            var apiUrl = `https://jsonblob.com/api/jsonBlob/${blobId}`;
+            
+            fetch(apiUrl)
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Hata: ' + response.statusText);
+                }
+            })
+            .then(data => {
+                var base64Content = data.content;
+                
+                var imgElement = document.getElementById('uploadedImage');
+                imgElement.src = `data:image/png;base64,${base64Content}`;
+            })
+            .catch(error => {
+                console.error("Hata:", error);
+            });
+        });
+    </script>
 
 </body>
 </html>
