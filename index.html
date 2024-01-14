@@ -136,7 +136,7 @@
 
         function copyLink() {
             var resultLink = document.createElement('textarea');
-            resultLink.value = 'https://fastimg.dvtfl.xyz/' + document.getElementById('result').getElementsByTagName('a')[0].innerText;
+            resultLink.value = document.getElementById('result').getElementsByTagName('a')[0].innerText;
             document.body.appendChild(resultLink);
             resultLink.select();
             document.execCommand('copy');
