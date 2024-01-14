@@ -3,123 +3,138 @@
 <head>
 <meta charset="UTF-8">
 <title>JSONBlob Resim Yükleme</title>
+<style>
+    @import url('https://fonts.googleapis.com/css?family=Raleway:400,700');
+    body {
+        font-family: "RaleWay", sans-serif;
+        max-width: 400px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #f4f4f4;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    h2 {
+        color: #333;
+    }
+
+    form {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    input {
+        margin-bottom: 10px;
+    }
+
+    button {
+        font-family: "RaleWay",sans-serif;
+        background-color: #4caf50;
+        color: #fff;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    #result {
+        font-family: "RaleWay",sans-serif;
+        margin-top: 20px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #fff;
+    }
+    #copyButton {
+        display: none;
+        background-color: #3498db;
+        color: #fff;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    #loadingLabel {
+        display: none;
+        margin-top: 10px;
+        color: #333;
+        font-weight: bold;
+    }
+</style>
 </head>
 <body>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 400px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #f4f4f4;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-    
-        h2 {
-            color: #333;
-        }
-    
-        form {
-            margin-bottom: 20px;
-        }
-    
-        label {
-            display: block;
-            margin-bottom: 10px;
-        }
-    
-        input {
-            margin-bottom: 10px;
-        }
-    
-        button {
-            background-color: #4caf50;
-            color: #fff;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-    
-        #result {
-            margin-top: 20px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #fff;
-        }
-        #copyButton {
-            background-color: #3498db;
-            color: #fff;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-    </style>
-    
-<h2>Resim Yükleme</h2>
+    <h2>Resim Yükleme</h2>
+    <form id="imageForm">
+        <label for="imageInput">Resim Seç (PNG veya JPEG):</label>
+        <input type="file" id="imageInput" accept="image/png, image/jpeg">
+        <button type="button" id="uploadButton" title="Resmi yükle">Resmi Yükle 📤</button>
+    </form>
+    <div id="loadingLabel">Resminiz Yükleniyor...</div>
+    <div id="result"></div>
+    <button id="copyButton" onclick="copyLink()" title="Linki Kopyala">Linki Kopyala 🔗</button>
 
-<!-- Resim yükleme formu -->
-<form id="imageForm">
-    <label for="imageInput">Resim Seç:</label>
-    <input type="file" id="imageInput" accept="image/png, image/jpeg">
-    <button type="button" id="uploadButton" title="Resmi yükle">Resmi Yükle</button>
-</form>
+    <script>
+        document.getElementById('uploadButton').addEventListener('click', function() {
+            var fileInput = document.getElementById('imageInput');
+            var file = fileInput.files[0];
 
-<!-- Sonuç gösterimi için alan -->
-<div id="result"></div>
-<button id="copyButton" onclick="copyLink()" title="Linki Kopyala">Linki Kopyala 🔗</button>
-<script>
-document.getElementById('uploadButton').addEventListener('click', function() {
-    var fileInput = document.getElementById('imageInput');
-    var file = fileInput.files[0];
+            if (file) {
+                document.getElementById('loadingLabel').style.display = 'block';
 
-    if (file) {
-        var reader = new FileReader();
-        reader.readAsDataURL(file);
+                var reader = new FileReader();
+                reader.readAsDataURL(file);
 
-        reader.onload = function() {
-            var base64Content = reader.result.split(',')[1];
-            uploadToJSONBlob(base64Content);
-        };
-    } else {
-        alert('Lütfen bir resim seçin.');
-    }
-});
+                reader.onload = function() {
+                    var base64Content = reader.result.split(',')[1];
+                    uploadToJSONBlob(base64Content);
+                };
+            } else {
+                alert('Lütfen bir resim seçin.');
+            }
+        });
 
-function uploadToJSONBlob(content) {
-    var apiUrl = 'https://jsonblob.com/api/jsonBlob';
-    var jsonData = { "content": content };
+        function uploadToJSONBlob(content) {
+            var apiUrl = 'https://jsonblob.com/api/jsonBlob';
+            var jsonData = { "content": content };
 
-    fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(jsonData)
-    })
-    .then(response => {
-        if (response.ok) {
-            // ID'yi Location başlığından al
-            var blobId = response.headers.get('Location').split('/').pop();
-            console.log("JSONBlob ID:", blobId);
-            return blobId;
-        } else {
-            throw new Error('Hata: ' + response.statusText);
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(jsonData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    // ID'yi Location başlığından al
+                    var blobId = response.headers.get('Location').split('/').pop();
+                    console.log("JSONBlob ID:", blobId);
+                    updateResult(blobId);
+                } else {
+                    throw new Error('Hata: ' + response.statusText);
+                }
+            })
+            .catch(error => {
+                document.getElementById('result').innerHTML = 'Hata oluştu: ' + error.message;
+            });
         }
-    })
-    .then(blobId => {
-        document.getElementById('result').innerHTML = 'Resim başarıyla yüklendi. <br> linkiniz: <a href="https://fastimg.dvtfl.xyz/' + blobId + '" target="_blank">' + blobId + '</a>';
 
-    })
-    .catch(error => {
-        document.getElementById('result').innerHTML = 'Hata oluştu: ' + error.message;
-    });
-}
-function copyLink() {
+        function updateResult(blobId) {
+            var resultElement = document.getElementById('result');
+            resultElement.innerHTML = 'Resim başarıyla yüklendi. <br> Linkiniz: <a href="https://fastimg.dvtfl.xyz/' + blobId + '" target="_blank">https://fastimg.dvtfl.xyz/' + blobId + '</a>';
+            resultElement.innerHTML += '<br> Linki kopyalamak için "Linki Kopyala" butonunu kullanabilirsiniz.';
+            document.getElementById('copyButton').style.display = 'block';
+            document.getElementById('loadingLabel').style.display = 'none';
+        }
+
+        function copyLink() {
             var resultLink = document.createElement('textarea');
             resultLink.value = 'https://fastimg.dvtfl.xyz/' + document.getElementById('result').getElementsByTagName('a')[0].innerText;
             document.body.appendChild(resultLink);
@@ -128,7 +143,6 @@ function copyLink() {
             document.body.removeChild(resultLink);
             alert('Link kopyalandı!');
         }
-</script>
-
+    </script>
 </body>
 </html>
