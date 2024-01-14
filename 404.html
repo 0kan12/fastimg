@@ -8,6 +8,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-direction: column;
             height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
@@ -15,13 +16,25 @@
 
         h2 {
             text-align: center;
+            margin-bottom: 20px;
         }
 
         #uploadedImage {
-            max-width: 100%;
+            max-width: 80%;
             height: auto;
             border: 2px solid #333;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        #downloadButton {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -29,6 +42,8 @@
 
     <h2>Yüklenen Resim</h2>
     <img id="uploadedImage" alt="Yüklenen Resim" src="" />
+
+    <a id="downloadButton" download="yuklenen_resim.png">Resmi İndir</a>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -49,6 +64,12 @@
                 
                 var imgElement = document.getElementById('uploadedImage');
                 imgElement.src = `data:image/png;base64,${base64Content}`;
+
+                var downloadButton = document.getElementById('downloadButton');
+                downloadButton.href = `data:image/png;base64,${base64Content}`;
+                downloadButton.onclick = function() {
+                    downloadButton.download = 'yuklenen_resim.png';
+                };
             })
             .catch(error => {
                 console.error("Hata:", error);
