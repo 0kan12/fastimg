@@ -49,6 +49,15 @@
             border-radius: 5px;
             background-color: #fff;
         }
+        #copyButton {
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
     </style>
     
 <h2>Resim Yükleme</h2>
@@ -62,7 +71,7 @@
 
 <!-- Sonuç gösterimi için alan -->
 <div id="result"></div>
-
+<button id="copyButton" onclick="copyLink()" title="Linki Kopyala">Linki Kopyala 🔗</button>
 <script>
 document.getElementById('uploadButton').addEventListener('click', function() {
     var fileInput = document.getElementById('imageInput');
@@ -110,7 +119,15 @@ function uploadToJSONBlob(content) {
         document.getElementById('result').innerHTML = 'Hata oluştu: ' + error.message;
     });
 }
-
+function copyLink() {
+            var resultLink = document.createElement('textarea');
+            resultLink.value = 'https://fastimg.dvtfl.xyz/' + document.getElementById('result').getElementsByTagName('a')[0].innerText;
+            document.body.appendChild(resultLink);
+            resultLink.select();
+            document.execCommand('copy');
+            document.body.removeChild(resultLink);
+            alert('Link kopyalandı!');
+        }
 </script>
 
 </body>
