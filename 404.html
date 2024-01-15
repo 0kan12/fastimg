@@ -49,8 +49,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             var pathname = window.location.pathname;
             var kisaltilmisBlobId = pathname.split('/').pop();
-            var gercekBlobId = uzatJSONBlobID(kisaltilmisBlobId);
-            var apiUrl = `https://jsonblob.com/api/jsonBlob/${gercekBlobId}`;
+            var apiUrl = `https://jsonblob.com/api/jsonBlob/${kisaltilmisBlobId}`;
             
             fetch(apiUrl)
             .then(response => {
@@ -77,24 +76,7 @@
             });
         });
 
-        function uzatJSONBlobID(kucultulmusID) {
-    // Elde edilen üsleri geri döndür
-    var powersOfTwo = [];
-    var currentPower = kucultulmusID;
-
-    while (currentPower > 0) {
-        powersOfTwo.push(currentPower);
-        currentPower = currentPower - 1;
-    }
-
-    // Üsleri kullanarak ondalık sayıyı elde et
-    var decimalID = powersOfTwo.reduce((result, power) => result + Math.pow(2, power), 0);
-
-    // Ondalık sayıyı onaltılık forma dönüştür
-    var hexID = decimalID.toString(16);
-
-    return hexID;
-}
+        
 
     </script>
 

@@ -115,9 +115,8 @@
                 if (response.ok) {
                     // ID'yi Location başlığından al
                     var blobId = response.headers.get('Location').split('/').pop();
-                    var kisaltilmisBlobId = kucultJSONBlobID(blobId);
                     console.log("JSONBlob ID:", blobId);
-                    updateResult(kisaltilmisBlobId);
+                    updateResult(blobId);
                 } else {
                     throw new Error('Hata: ' + response.statusText);
                 }
@@ -127,25 +126,7 @@
             });
         }
 
-        function kucultJSONBlobID(jsonBlobID) {
-          // JSON Blob ID'sini ondalık bir sayıya dönüştür
-          var decimalID = parseInt(jsonBlobID, 16);
       
-          // 2'nin üsleri olarak ifade et
-          var powersOfTwo = [];
-          var remaining = decimalID;
-      
-          while (remaining > 0) {
-              var largestPower = Math.floor(Math.log2(remaining));
-              powersOfTwo.push(largestPower);
-              remaining -= Math.pow(2, largestPower);
-          }
-      
-          // Elde edilen üsleri topla
-          var sumOfPowers = powersOfTwo.reduce((sum, power) => sum + power, 0);
-      
-          return sumOfPowers;
-      }
 
         function updateResult(blobId) {
             var resultElement = document.getElementById('result');
