@@ -40,7 +40,8 @@
 </head>
 <body>
 
-    <h2>Yüklenen Resim</h2>
+    <h2 >Yüklenen Resim</h2>
+    <h3 id="filename"></h3>
     <img id="uploadedImage" alt="Yüklenen Resim" src="" />
 
     <a id="downloadButton" download="yuklenen_resim.png">Resmi İndir</a>
@@ -63,14 +64,16 @@
             })
             .then(data => {
                 var base64Content = data.content;
-                
+                var filename=data.name;
+                var filename1=document.getElementById("filename")
+                filename1.innerHTML=filename
                 var imgElement = document.getElementById('uploadedImage');
                 imgElement.src = `data:image/png;base64,${base64Content}`;
 
                 var downloadButton = document.getElementById('downloadButton');
                 downloadButton.href = `data:image/png;base64,${base64Content}`;
                 downloadButton.onclick = function() {
-                    downloadButton.download = 'yuklenen_resim.png';
+                    downloadButton.download = filename;
                 };
             })
             .catch(error => {

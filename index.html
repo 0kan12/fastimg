@@ -86,12 +86,13 @@
         document.getElementById('uploadButton').addEventListener('click', function() {
             var fileInput = document.getElementById('imageInput');
             var file = fileInput.files[0];
+            var name=file.name
 
             if (file) {
                 document.getElementById('loadingLabel').style.display = 'block';
 
                 var reader = new FileReader();
-                reader.readAsDataURL(file);
+                reader.readAsDataURL(file,name);
 
                 reader.onload = function() {
                     var base64Content = reader.result.split(',')[1];
@@ -102,9 +103,9 @@
             }
         });
 
-        function uploadToJSONBlob(content) {
+        function uploadToJSONBlob(content,name) {
             var apiUrl = 'https://jsonblob.com/api/jsonBlob';
-            var jsonData = { "content": content };
+            var jsonData = { "content": content,"name":name};
 
             fetch(apiUrl, {
                 method: 'POST',
