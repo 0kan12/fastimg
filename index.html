@@ -134,6 +134,7 @@
         function updateResult(blobId) {
             var resultElement = document.getElementById('result');
             resultElement.innerHTML = 'Resim başarıyla yüklendi. <br> Linkiniz: <a href="https://fastimg.dvtfl.xyz/' + blobId + '" target="_blank">https://fastimg.dvtfl.xyz/' + blobId + '</a>';
+            resultElement.innerHTML +="QrCode oluşturmak için : <a href=https://qrgen.dvtfl.xyz?data=https://fastimg.dvtfl.xyz/"+blobId+">Tıklayın</a>"
             resultElement.innerHTML += '<br> Linki kopyalamak için "Linki Kopyala" butonunu kullanabilirsiniz.';
             document.getElementById('copyButton').style.display = 'block';
             document.getElementById('loadingLabel').style.display = 'none';
