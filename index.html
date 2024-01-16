@@ -1,79 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>FastIMG</title>
-<style>
-    @import url('https://fonts.googleapis.com/css?family=Raleway:400,700');
-    body {
-        font-family: "RaleWay", sans-serif;
-        max-width: 400px;
-        margin: 20px auto;
-        padding: 20px;
-        background-color: #f4f4f4;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-    }
+    <meta charset="UTF-8">
+    <title>FastIMG</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Raleway:400,700');
+        body {
+            font-family: "RaleWay", sans-serif;
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
 
-    h2 {
-        color: #333;
-    }
+        h2 {
+            color: #333;
+        }
 
-    form {
-        margin-bottom: 20px;
-    }
+        form {
+            margin-bottom: 20px;
+        }
 
-    label {
-        display: block;
-        margin-bottom: 10px;
-    }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
 
-    input {
-        margin-bottom: 10px;
-    }
+        input {
+            margin-bottom: 10px;
+        }
 
-    button {
-        font-family: "RaleWay",sans-serif;
-        background-color: #4caf50;
-        color: #fff;
-        padding: 10px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
+        button {
+            font-family: "RaleWay", sans-serif;
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
-    #result {
-        font-family: "RaleWay",sans-serif;
-        margin-top: 20px;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        background-color: #fff;
-    }
-    #copyButton {
-        display: none;
-        background-color: #3498db;
-        color: #fff;
-        padding: 10px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-top: 10px;
-    }
+        #result {
+            font-family: "RaleWay", sans-serif;
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+        }
 
-    #loadingLabel {
-        display: none;
-        margin-top: 10px;
-        color: #333;
-        font-weight: bold;
-    }
-</style>
+        #copyButton {
+            display: none;
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        #custom-file-button {
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        #loadingLabel {
+            display: none;
+            margin-top: 10px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        #file-label {
+            font-size: 1em;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
     <h2>Resim Yükleme</h2>
     <form id="imageForm">
-        <label for="imageInput">Resim Seç (PNG veya JPEG):</label>
-        <input type="file" id="imageInput" accept="image/png, image/jpeg">
+        <label for="file-input" id="custom-file-button">
+            Dosya Seç
+        </label>
+        <input type="file" id="file-input" name="file" style="display: none;">
+        <div id="file-label">Dosya Seçilmedi</div>
         <button type="button" id="uploadButton" title="Resmi yükle">Resmi Yükle 📤</button>
     </form>
     <div id="loadingLabel">Resminiz Yükleniyor...</div>
@@ -84,10 +103,17 @@
         <div>Okan tarafından yapıldı.</div>
     </footer>
     <script>
+        const fileInput = document.getElementById('file-input');
+        const fileLabel = document.getElementById('file-label');
+
+        fileInput.addEventListener('change', function () {
+            const fileName = this.value.split('\\').pop();
+            fileLabel.innerHTML = fileName !== '' ? `Seçilen Dosya: ${fileName}` : 'Dosya Seçilmedi';
+        });
         document.getElementById('uploadButton').addEventListener('click', function() {
-            var fileInput = document.getElementById('imageInput');
+            var fileInput = document.getElementById('file-input');
             var file = fileInput.files[0];
-            var name=file.name
+            var name = file.name;
 
             if (file) {
                 document.getElementById('loadingLabel').style.display = 'block';
@@ -97,16 +123,16 @@
 
                 reader.onload = function() {
                     var base64Content = reader.result.split(',')[1];
-                    uploadToJSONBlob(base64Content,name);
+                    uploadToJSONBlob(base64Content, name);
                 };
             } else {
                 alert('Lütfen bir resim seçin.');
             }
         });
 
-        function uploadToJSONBlob(content,name) {
+        function uploadToJSONBlob(content, name) {
             var apiUrl = 'https://jsonblob.com/api/jsonBlob';
-            var jsonData = { "content": content,"name":name};
+            var jsonData = { "content": content, "name": name };
 
             fetch(apiUrl, {
                 method: 'POST',
@@ -117,7 +143,6 @@
             })
             .then(response => {
                 if (response.ok) {
-                    // ID'yi Location başlığından al
                     var blobId = response.headers.get('Location').split('/').pop();
                     console.log("JSONBlob ID:", blobId);
                     updateResult(blobId);
@@ -130,12 +155,10 @@
             });
         }
 
-      
-
         function updateResult(blobId) {
             var resultElement = document.getElementById('result');
             resultElement.innerHTML = 'Resim başarıyla yüklendi. <br> Linkiniz: <a href="https://fastimg.dvtfl.xyz/' + blobId + '" target="_blank">https://fastimg.dvtfl.xyz/' + blobId + '</a> <br>';
-            resultElement.innerHTML +="QrCode oluşturmak için : <a href=https://qrgen.dvtfl.xyz?data=https://fastimg.dvtfl.xyz/"+blobId+">Tıklayın</a>"
+            resultElement.innerHTML += "QrCode oluşturmak için : <a href=https://qrgen.dvtfl.xyz?data=https://fastimg.dvtfl.xyz/" + blobId + ">Tıklayın</a>";
             resultElement.innerHTML += '<br> Linki kopyalamak için "Linki Kopyala" butonunu kullanabilirsiniz.';
             document.getElementById('copyButton').style.display = 'block';
             document.getElementById('loadingLabel').style.display = 'none';
