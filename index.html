@@ -92,11 +92,11 @@
                 document.getElementById('loadingLabel').style.display = 'block';
 
                 var reader = new FileReader();
-                reader.readAsDataURL(file,name);
+                reader.readAsDataURL(file);
 
                 reader.onload = function() {
                     var base64Content = reader.result.split(',')[1];
-                    uploadToJSONBlob(base64Content);
+                    uploadToJSONBlob(base64Content,name);
                 };
             } else {
                 alert('Lütfen bir resim seçin.');
