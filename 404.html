@@ -51,39 +51,45 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var pathname = window.location.pathname;
-            var kisaltilmisBlobId = pathname.split('/').pop();
-            var apiUrl = `https://jsonblob.com/api/jsonBlob/${kisaltilmisBlobId}`;
-            
-            fetch(apiUrl)
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error('Hata: ' + response.statusText);
-                }
-            })
-            .then(data => {
-                var base64Content = data.content;
-                var filename=data.name;
-                var filename1=document.getElementById("filename")
-                filename1.innerHTML=filename
-                var imgElement = document.getElementById('uploadedImage');
-                imgElement.src = `data:image/png;base64,${base64Content}`;
-
-                var downloadButton = document.getElementById('downloadButton');
-                downloadButton.href = `data:image/png;base64,${base64Content}`;
-                downloadButton.onclick = function() {
-                    downloadButton.download = filename;
-                };
-            })
-            .catch(error => {
-                console.error("Hata:", error);
-            });
+    
+            // Eğer "/api/" ile başlıyorsa
+            if (pathname.startsWith('/api/')) {
+                // Sayfanın içeriğini sadece resim olarak göster
+                document.body.innerHTML = `<img src="${window.location.href}" alt="Resim" style="max-width: 100%; height: auto;">`;
+            } else {
+                // Eğer "/api/" ile başlamıyorsa, API'den resmi çek ve sayfanın içeriğini oluştur
+                var kisaltilmisBlobId = pathname.split('/').pop();
+                var apiUrl = `https://jsonblob.com/api/jsonBlob/${kisaltilmisBlobId}`;
+    
+                fetch(apiUrl)
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error('Hata: ' + response.statusText);
+                        }
+                    })
+                    .then(data => {
+                        var base64Content = data.content;
+                        var filename = data.name;
+                        var filename1 = document.getElementById("filename")
+                        filename1.innerHTML = filename
+                        var imgElement = document.getElementById('uploadedImage');
+                        imgElement.src = `data:image/png;base64,${base64Content}`;
+    
+                        var downloadButton = document.getElementById('downloadButton');
+                        downloadButton.href = `data:image/png;base64,${base64Content}`;
+                        downloadButton.onclick = function() {
+                            downloadButton.download = filename;
+                        };
+                    })
+                    .catch(error => {
+                        console.error("Hata:", error);
+                    });
+            }
         });
-
-        
-
     </script>
+    
 
 </body>
 </html>
