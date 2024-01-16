@@ -87,12 +87,18 @@
 <body>
     <h2>Resim Yükleme</h2>
     <form id="imageForm">
-        <label for="file-input" id="custom-file-button">
-            Dosya Seç
-        </label>
-        <input type="file" id="file-input" name="file" style="display: none;">
-        <div id="file-label">Dosya Seçilmedi</div>
-        <button type="button" id="uploadButton" title="Resmi yükle">Resmi Yükle 📤</button>
+        <div style="display: flex; justify-content: space-between;">
+            <div style="width: 48%;">
+                <label for="file-input" id="custom-file-button">
+                    Dosya Seç
+                </label>
+                <input type="file" id="file-input" name="file" style="display: none;">
+                <div id="file-label">Dosya Seçilmedi</div>
+            </div>
+            <div style="width: 48%; text-align: right;">
+                <button type="button" id="uploadButton" title="Resmi yükle">Resmi Yükle 📤</button>
+            </div>
+        </div>
     </form>
     <div id="loadingLabel">Resminiz Yükleniyor...</div>
     <div id="result"></div>
