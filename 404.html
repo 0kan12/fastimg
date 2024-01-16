@@ -50,14 +50,25 @@
     </footer>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            var pathname = window.location.pathname;
-    
-            // Eğer "/api/" ile başlıyorsa
             if (pathname.startsWith('/api/')) {
-                // Sayfanın içeriğini sadece resim olarak göster
-                document.body.innerHTML = `<img src="${window.location.href}" alt="Resim" style="max-width: 100%; height: auto;">`;
+                var blobid= pathname.substring('/api/'.length);
+                var apiUrl = `https://jsonblob.com/api/jsonBlob/${blobid}`;
+                fetch(apiUrl)
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error('Hata: ' + response.statusText);
+                        }
+                    })
+                    .then(data => {
+                        var base64Content = data.content;
+                    })
+                    .catch(error => {
+                        console.error("Hata:", error);
+                    });
+                window.location.href=`data:image/png;base64,${base64Content}`;
             } else {
-                // Eğer "/api/" ile başlamıyorsa, API'den resmi çek ve sayfanın içeriğini oluştur
                 var kisaltilmisBlobId = pathname.split('/').pop();
                 var apiUrl = `https://jsonblob.com/api/jsonBlob/${kisaltilmisBlobId}`;
     
