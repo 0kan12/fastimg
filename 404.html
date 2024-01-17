@@ -51,35 +51,57 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var pathname = window.location.pathname;
-                var kisaltilmisBlobId = pathname.split('/').pop();
-                var apiUrl = `https://jsonblob.com/api/jsonBlob/${kisaltilmisBlobId}`;
-    
-                fetch(apiUrl)
-                    .then(response => {
-                        if (response.ok) {
-                            return response.json();
-                        } else {
-                            throw new Error('Hata: ' + response.statusText);
-                        }
-                    })
-                    .then(data => {
-                        var base64Content = data.content;
-                        var filename = data.name;
-                        var filename1 = document.getElementById("filename")
-                        filename1.innerHTML = filename
-                        var imgElement = document.getElementById('uploadedImage');
-                        imgElement.src = `data:image/png;base64,${base64Content}`;
-    
-                        var downloadButton = document.getElementById('downloadButton');
-                        downloadButton.href = `data:image/png;base64,${base64Content}`;
-                        downloadButton.onclick = function() {
-                            downloadButton.download = filename;
-                        };
-                    })
-                    .catch(error => {
-                        console.error("Hata:", error);
-                    });
-            
+            var kisaltilmisBlobId = pathname.split('/').pop();
+            var apiUrl = `https://jsonblob.com/api/jsonBlob/${kisaltilmisBlobId}`;
+
+            fetch(apiUrl)
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Hata: ' + response.statusText);
+                    }
+                })
+                .then(data => {
+                    var base64Content = data.content;
+                    var filename = data.name;
+                    var filename1 = document.getElementById("filename")
+                    filename1.innerHTML = filename;
+                    var imgElement = document.getElementById('uploadedImage');
+                    imgElement.src = `data:image/png;base64,${base64Content}`;
+
+                    var downloadButton = document.getElementById('downloadButton');
+                    downloadButton.href = `data:image/png;base64,${base64Content}`;
+                    downloadButton.onclick = function() {
+                        downloadButton.download = filename;
+                    };
+
+                    // Open Graph Meta Etiketlerini Ekleyin
+                    var headElement = document.head;
+                    var ogTitle = document.createElement('meta');
+                    ogTitle.setAttribute('property', 'og:title');
+                    ogTitle.content = 'FastIMG';
+
+                    var ogDescription = document.createElement('meta');
+                    ogDescription.setAttribute('property', 'og:description');
+                    ogDescription.content = 'Resim Paylaşma Uygulaması';
+
+                    var ogImage = document.createElement('meta');
+                    ogImage.setAttribute('property', 'og:image');
+                    ogImage.content = `data:image/png;base64,${base64Content}`;
+
+                    var ogUrl = document.createElement('meta');
+                    ogUrl.setAttribute('property', 'og:url');
+                    ogUrl.content = window.location.href;
+
+                    headElement.appendChild(ogTitle);
+                    headElement.appendChild(ogDescription);
+                    headElement.appendChild(ogImage);
+                    headElement.appendChild(ogUrl);
+                })
+                .catch(error => {
+                    console.error("Hata:", error);
+                });
         });
     </script>
     
