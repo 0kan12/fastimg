@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Obfuscation</title>
+</head>
+<body>
+    <h1>Code Obfuscation Tool</h1>
+    <form id="obfuscationForm">
+        <label for="language">Select Language:</label>
+        <select id="language" name="language">
+            <option value="python">Python</option>
+            <!-- Diğer dilleri ekleyebilirsiniz -->
+        </select><br><br>
+
+        <label for="code">Enter Your Code:</label><br>
+        <textarea id="code" name="code" rows="10" cols="50"></textarea><br><br>
+
+        <button type="button" onclick="obfuscateCode()">Obfuscate Code</button>
+    </form>
+
+    <h2>Obfuscated Code:</h2>
+    <pre id="obfuscatedCode"></pre>
+
+    <script>
+        function obfuscateCode() {
+            var language = document.getElementById('language').value;
+            var code = document.getElementById('code').value;
+
+            // API'ye gönderilecek veriler
+            var data = {
+                language: language,
+                code: code
+            };
+
+            // fetch kullanarak POST isteği gönderme
+            fetch("https://cors-anywhere.herokuapp.com/corsdemo/https://freecodingtools.org/api/obfuscator", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.text();
+            })
+            .then(obfuscatedCode => {
+                // Başarılıysa, obfuscated kodu göster
+                document.getElementById('obfuscatedCode').innerText = obfuscatedCode;
+            })
+            .catch(error => {
+                // Hata durumunda hata mesajını göster
+                console.error("Error:", error.message);
+            });
+        }
+    </script>
+</body>
+</html>
