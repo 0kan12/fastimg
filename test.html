@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var pathname = window.location.pathname;
+                var kisaltilmisBlobId = pathname.split('/').pop();
+                var apiUrl = `https://jsonblob.com/api/jsonBlob/${kisaltilmisBlobId}`;
+    
+                fetch(apiUrl)
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error('Hata: ' + response.statusText);
+                        }
+                    })
+                    .then(data => {
+                        var base64Content = data.content;
+                        window.location.href = `data:image/png;base64,${base64Content}`;
+                    })
+                    .catch(error => {
+                        console.error("Hata:", error);
+                    });
+            
+        });
+    </script>
+    
+    
+
+</body>
+</html>
