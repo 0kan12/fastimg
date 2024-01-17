@@ -5,7 +5,6 @@
     <title>FastIMG</title>
     <meta property="og:title" content="FastIMG"/>
     <meta property="og:description" content="Resim Paylaşma Uygulaması"/>
-    <meta property="og:image" id="ogImage" content=""/>
     <meta property="og:url" content="https://fastimg.dvtfl.xyz"/>
     <style>
         body {
@@ -68,8 +67,6 @@
                     })
                     .then(data => {
                         var base64Content = data.content;
-                        var ogImageMeta = document.getElementById('ogImage');
-                        ogImageMeta.content = `data:image/png;base64,${base64Content}`;
                         var filename = data.name;
                         var filename1 = document.getElementById("filename")
                         filename1.innerHTML = filename
