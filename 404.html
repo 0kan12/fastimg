@@ -47,8 +47,23 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var pathname = window.location.pathname;
-                var kisaltilmisBlobId = pathname.split('/').pop();
-                var apiUrl = `https://jsonblob.com/api/jsonBlob/${kisaltilmisBlobId}`;
+            var short1= pathname.split('/').pop();
+            var short_key=""
+            var urla="https://fastimg.pythonanywhere.com/get_blob_id?short="
+                fetch(urla+short1)
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error('Hata: ' + response.statusText);
+                        }
+                    })
+                    .then(data => {
+                        short_key=data.data
+                        })
+                    });
+
+                var apiUrl = `https://jsonblob.com/api/jsonBlob/${short_key}`;
     
                 fetch(apiUrl)
                     .then(response => {
