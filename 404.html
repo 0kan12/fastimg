@@ -62,7 +62,7 @@
                         var base64Content = data.content;
                         var filename = data.name;
                         var filename1 = document.getElementById("filename")
-                        filename1.innerHTML = filename
+                        filename1.innerHTML = "Resim İsmi: "+filename
                         var imgElement = document.getElementById('uploadedImage');
                         imgElement.src = `data:image/png;base64,${base64Content}`;
     
