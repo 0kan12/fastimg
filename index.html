@@ -138,6 +138,7 @@
 
         function uploadToJSONBlob(content, name) {
             var apiUrl = 'https://jsonblob.com/api/jsonBlob';
+            var urla='https://fastimg.pythonanywhere.com/new_img_link?id='
             var jsonData = { "content": content, "name": name };
 
             fetch(apiUrl, {
@@ -151,7 +152,19 @@
                 if (response.ok) {
                     var blobId = response.headers.get('Location').split('/').pop();
                     console.log("JSONBlob ID:", blobId);
-                    updateResult(blobId);
+                    fetch(urla+blobId,{
+                        method: 'GET',
+                    }).then(response=>{
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error('Hata: ' + response.statusText);
+                        }
+                    }).then(data=>{
+                        short=data.data;
+                        updateResult(short);
+                    })
+                    
                 } else {
                     throw new Error('Hata: ' + response.statusText);
                 }
