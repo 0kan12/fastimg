@@ -44,27 +44,26 @@
     <footer style="position: fixed; bottom: 0; right: 0; background: #f1f1f1; padding: 10px;">
         <div>Okan tarafından yapıldı.</div>
     </footer>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var pathname = window.location.pathname;
-            var short1= pathname.split('/').pop();
-            var short_key=""
-            var urla="https://fastimg.pythonanywhere.com/get_blob_id?short="
-                fetch(urla+short1)
-                    .then(response => {
-                        if (response.ok) {
-                            return response.json();
-                        } else {
-                            throw new Error('Hata: ' + response.statusText);
-                        }
-                    })
-                    .then(data => {
-                        short_key=data.data
-                        })
-                    });
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var pathname = window.location.pathname;
+        var short1 = pathname.split('/').pop();
+        var short_key = "";
+        var urla = "https://fastimg.pythonanywhere.com/get_blob_id?short=";
 
+        fetch(urla + short1)
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Hata: ' + response.statusText);
+                }
+            })
+            .then(data => {
+                short_key = data.data;
+                
                 var apiUrl = `https://jsonblob.com/api/jsonBlob/${short_key}`;
-    
+
                 fetch(apiUrl)
                     .then(response => {
                         if (response.ok) {
@@ -76,11 +75,11 @@
                     .then(data => {
                         var base64Content = data.content;
                         var filename = data.name;
-                        var filename1 = document.getElementById("filename")
-                        filename1.innerHTML = "Resim İsmi: "+filename
+                        var filename1 = document.getElementById("filename");
+                        filename1.innerHTML = "Resim İsmi: " + filename;
                         var imgElement = document.getElementById('uploadedImage');
                         imgElement.src = `data:image/png;base64,${base64Content}`;
-    
+
                         var downloadButton = document.getElementById('downloadButton');
                         downloadButton.href = `data:image/png;base64,${base64Content}`;
                         downloadButton.onclick = function() {
@@ -90,11 +89,11 @@
                     .catch(error => {
                         console.error("Hata:", error);
                     });
-            
-        });
-    </script>
-    
-    
-
+            })
+            .catch(error => {
+                console.error("Hata:", error);
+            });
+    });
+</script>
 </body>
 </html>
