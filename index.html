@@ -120,8 +120,6 @@
             var fileInput = document.getElementById('file-input');
             var file = fileInput.files[0];
             var name = file.name;
-            var bugununTarihi = new Date().toLocaleString('tr-TR', { day: 'numeric', month: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' });
-            console.log(bugununTarihi);
             if (file) {
                 document.getElementById('loadingLabel').style.display = 'block';
 
@@ -140,6 +138,8 @@
         function uploadToJSONBlob(content, name) {
             var apiUrl = 'https://jsonblob.com/api/jsonBlob';
             var urla='https://fastimg.pythonanywhere.com/new_img_link?id='
+            var bugununTarihi = new Date().toLocaleString('tr-TR', { day: 'numeric', month: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' });
+            console.log(bugununTarihi);
             var jsonData = { "content": content, "name": name ,"date":bugununTarihi};
 
             fetch(apiUrl, {
