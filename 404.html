@@ -124,11 +124,11 @@
                             reportLink.addEventListener('click', function () {
                                 var reportSubject = prompt('Lütfen şikayet konusunu girin:');
                                 if (reportSubject !== null) {
-                                    var previewMessage = `Şikayet konusu: ${reportSubject}\n\nBu şikayeti yapmadan önce bir önizleme:\n\n${filename} isimli resmin şikayet edileceği düşünülmektedir. Şikayetinizi onaylıyor musunuz?`;
+                                    var previewMessage = `(Lütfen gereksiz şikayetlerde bulunmamaya özen gösterin. Şikayetleriniz IP adresinizle birlikte kaydedilmektedir.)\nŞikayet konusu: ${reportSubject}\n\nBu şikayeti yapmadan önce bir önizleme:\n\n${filename} isimli resmin şikayet edileceği düşünülmektedir. Şikayetinizi onaylıyor musunuz?`;
                                     var confirmation = confirm(previewMessage);
 
                                     if (confirmation) {
-                                        alert('Teşekkür ederiz! Şikayetiniz alınmıştır. Lütfen gereksiz şikayetlerde bulunmamaya özen gösterin. Şikayetleriniz IP adresinizle birlikte kaydedilmektedir.');
+                                        alert('Teşekkür ederiz! Şikayetiniz alınmıştır.');
                                     }
                                 }
                             });
