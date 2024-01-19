@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>FastIMG</title>
     <style>
+
         body {
             display: flex;
             align-items: center;
@@ -14,14 +15,30 @@
             font-family: Arial, sans-serif;
         }
 
-        h2 {
-            text-align: center;     
+        header {
+            text-align: center;
+            margin-bottom: 20px;
         }
+
+        h2 {
+            text-align: center;
+        }
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
         #uploadedImage {
             max-height: 70%;
             max-width: 70%;
             height: auto;
             margin-bottom: 10px;
+        }
+
+
+        #downloadContainer {
+            margin-top: 20px;
         }
 
         #downloadButton {
@@ -33,14 +50,28 @@
             border-radius: 5px;
             cursor: pointer;
         }
+        footer {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            background: #f1f1f1;
+            padding: 10px;
+        }
     </style>
+
 </head>
 <body>
-    <h3 id="filename"></h3>
-    <h5 id="tarih"></h5>
-    <img id="uploadedImage"alt="Yüklenen Resim" src="" />
-    <a id="downloadButton" download="yuklenen_resim.png">Resmi İndir</a>
-    <footer style="position: fixed; bottom: 0; right: 0; background: #f1f1f1; padding: 10px;">
+    <header>
+        <h3 id="filename"></h3>
+        <h5 id="tarih"></h5>
+    </header>
+    <main>
+        <img id="uploadedImage" alt="Yüklenen Resim" src="" />
+        <div id="downloadContainer">
+            <a id="downloadButton" download="yuklenen_resim.png">Resmi İndir</a>
+        </div>
+    </main>
+    <footer>
         <div>Okan tarafından yapıldı.</div>
     </footer>
 <script>
