@@ -5,7 +5,7 @@
     <title>FastIMG</title>
     <style>
         /* Diğer stiller burada */
-
+        
         body {
             display: flex;
             align-items: center;
@@ -51,6 +51,17 @@
             cursor: pointer;
         }
 
+        #reportLink {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #FF0000;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
         footer {
             position: fixed;
             bottom: 0;
@@ -67,10 +78,10 @@
     </header>
     <main>
         <img id="uploadedImage" alt="Yüklenen Resim" src="" />
-        <a id="reportLink" href="#">Bu resmi bildir</a>
         <div id="downloadContainer">
             <a id="downloadButton" download="yuklenen_resim.png">Resmi İndir</a>
         </div>
+        <a id="reportLink" href="#">Bu resmi bildir</a>
     </main>
     <footer>
         <div>Okan tarafından yapıldı.</div>
@@ -83,20 +94,13 @@
             var short_key = "";
             var urla = "https://fastimg.pythonanywhere.com/get_blob_id?short=";
 
-            fetch(urla + short1)
-                .then(response => {
-                    if (response.ok) {
-                        return response.json();
-                    } else {
-                        throw new Error('Hata: ' + response.statusText);
-                    }
-                })
+            // Kullanıcının gerçek IP adresini almak için ipinfo.io API'ye istek gönder
+            fetch("https://ipinfo.io/json")
+                .then(response => response.json())
                 .then(data => {
-                    short_key = data.data;
+                    var userIp = data.ip;
 
-                    var apiUrl = `https://jsonblob.com/api/jsonBlob/${short_key}`;
-
-                    fetch(apiUrl)
+                    fetch(urla + short1)
                         .then(response => {
                             if (response.ok) {
                                 return response.json();
@@ -105,41 +109,82 @@
                             }
                         })
                         .then(data => {
-                            var base64Content = data.content;
-                            var filename = data.name;
-                            var filename1 = document.getElementById("filename");
-                            document.title = "FastIMG - " + filename;
-                            filename1.innerHTML = "Resim İsmi: " + filename;
-                            elta.innerHTML = "Yüklenme tarihi: " + data.date;
-                            var imgElement = document.getElementById('uploadedImage');
-                            imgElement.src = `data:image/png;base64,${base64Content}`;
+                            short_key = data.data;
 
-                            var downloadButton = document.getElementById('downloadButton');
-                            downloadButton.href = `data:image/png;base64,${base64Content}`;
-                            downloadButton.onclick = function () {
-                                downloadButton.download = filename;
-                            };
+                            var apiUrl = `https://jsonblob.com/api/jsonBlob/${short_key}`;
 
-                            var reportLink = document.getElementById('reportLink');
-                            reportLink.addEventListener('click', function () {
-                                var reportSubject = prompt('Lütfen şikayet konusunu girin:');
-                                if (reportSubject !== null) {
-                                    var previewMessage = `(Lütfen gereksiz şikayetlerde bulunmamaya özen gösterin. Şikayetleriniz IP adresinizle birlikte kaydedilmektedir.)\nŞikayet konusu: ${reportSubject}\n\nBu şikayeti yapmadan önce bir önizleme:\n\n${filename} isimli resmin şikayet edileceği düşünülmektedir. Şikayetinizi onaylıyor musunuz?`;
-                                    var confirmation = confirm(previewMessage);
-
-                                    if (confirmation) {
-                                        alert('Teşekkür ederiz! Şikayetiniz alınmıştır.');
+                            fetch(apiUrl)
+                                .then(response => {
+                                    if (response.ok) {
+                                        return response.json();
+                                    } else {
+                                        throw new Error('Hata: ' + response.statusText);
                                     }
-                                }
-                            });
+                                })
+                                .then(data => {
+                                    var base64Content = data.content;
+                                    var filename = data.name;
+                                    var filename1 = document.getElementById("filename");
+                                    document.title = "FastIMG - " + filename;
+                                    filename1.innerHTML = "Resim İsmi: " + filename;
+                                    elta.innerHTML = "Yüklenme tarihi: " + data.date;
+                                    var imgElement = document.getElementById('uploadedImage');
+                                    imgElement.src = `data:image/png;base64,${base64Content}`;
+
+                                    var downloadButton = document.getElementById('downloadButton');
+                                    downloadButton.href = `data:image/png;base64,${base64Content}`;
+                                    downloadButton.onclick = function () {
+                                        downloadButton.download = filename;
+                                    };
+
+                                    var reportLink = document.getElementById('reportLink');
+                                    reportLink.addEventListener('click', function () {
+                                        var reportSubject = prompt('Lütfen şikayet konusunu girin:');
+                                        if (reportSubject !== null) {
+                                            // Şikayet bilgilerini API'ye gönder
+                                            sendReportData(short_key, reportSubject, userIp);
+                                        }
+                                    });
+                                })
+                                .catch(error => {
+                                    console.error("Hata:", error);
+                                });
                         })
                         .catch(error => {
                             console.error("Hata:", error);
                         });
                 })
                 .catch(error => {
-                    console.error("Hata:", error);
+                    console.error("IP Adresi Alınamadı:", error);
                 });
+
+            function sendReportData(blobId, reportSubject, userIp) {
+                var reportApiUrl = "https://fastimg.pythonanywhere.com/report";
+                var reportData = {
+                    id: blobId,
+                    con: reportSubject,
+                    ip: userIp
+                };
+
+                fetch(reportApiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(reportData),
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('Teşekkür ederiz! Şikayetiniz alınmıştır. Lütfen gereksiz şikayetlerde bulunmamaya özen gösterin. Şikayetleriniz IP adresinizle birlikte kaydedilmektedir.');
+                        } else {
+                            throw new Error('Hata: ' + response.statusText);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Hata:", error);
+                        alert('Şikayet gönderilirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.');
+                    });
+            }
         });
     </script>
 </body>
