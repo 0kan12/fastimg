@@ -38,8 +38,8 @@
 </head>
 <body>
     <h3 id="filename"></h3>
+    <h5 id="tarih"></h5>
     <img id="uploadedImage" width="400px" height="400px" alt="Yüklenen Resim" src="" />
-    <h6 id="tarih"></h6>
     <a id="downloadButton" download="yuklenen_resim.png">Resmi İndir</a>
     <footer style="position: fixed; bottom: 0; right: 0; background: #f1f1f1; padding: 10px;">
         <div>Okan tarafından yapıldı.</div>
@@ -77,8 +77,9 @@
                         var base64Content = data.content;
                         var filename = data.name;
                         var filename1 = document.getElementById("filename");
+                        document.title="FastIMG - "+filename
                         filename1.innerHTML = "Resim İsmi: " + filename;
-                        elta.innerHTML=data.date
+                        elta.innerHTML="Yüklenme tarihi: "+data.date
                         var imgElement = document.getElementById('uploadedImage');
                         imgElement.src = `data:image/png;base64,${base64Content}`;
 
