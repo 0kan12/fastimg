@@ -76,7 +76,7 @@
         <div>Okan tarafından yapıldı.</div>
     </footer>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             var pathname = window.location.pathname;
             var elta = document.getElementById("tarih");
             var short1 = pathname.split('/').pop();
@@ -123,9 +123,13 @@
                             var reportLink = document.getElementById('reportLink');
                             reportLink.addEventListener('click', function () {
                                 var reportSubject = prompt('Lütfen şikayet konusunu girin:');
-                                if (reportSubject) {
-                                    // Şikayet konusu ile ilgili işlemleri burada gerçekleştirebilirsiniz.
-                                    alert('Şikayetiniz alınmıştır. Teşekkür ederiz!');
+                                if (reportSubject !== null) {
+                                    var previewMessage = `Şikayet konusu: ${reportSubject}\n\nBu şikayeti yapmadan önce bir önizleme:\n\n${filename} isimli resmin şikayet edileceği düşünülmektedir. Şikayetinizi onaylıyor musunuz?`;
+                                    var confirmation = confirm(previewMessage);
+
+                                    if (confirmation) {
+                                        alert('Teşekkür ederiz! Şikayetiniz alınmıştır. Lütfen gereksiz şikayetlerde bulunmamaya özen gösterin. Şikayetleriniz IP adresinizle birlikte kaydedilmektedir.');
+                                    }
                                 }
                             });
                         })
