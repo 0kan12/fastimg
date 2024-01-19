@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <title>FastIMG</title>
     <style>
-        /* Diğer stiller burada */
-        
+
         body {
             display: flex;
             align-items: center;
@@ -37,6 +36,7 @@
             margin-bottom: 10px;
         }
 
+
         #downloadContainer {
             margin-top: 20px;
         }
@@ -50,18 +50,6 @@
             border-radius: 5px;
             cursor: pointer;
         }
-
-        #reportLink {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #FF0000;
-            color: #fff;
-            text-decoration: none;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
         footer {
             position: fixed;
             bottom: 0;
@@ -70,6 +58,7 @@
             padding: 10px;
         }
     </style>
+
 </head>
 <body>
     <header>
@@ -78,114 +67,67 @@
     </header>
     <main>
         <img id="uploadedImage" alt="Yüklenen Resim" src="" />
+        <a href="">Bu resmi bildir</a>
         <div id="downloadContainer">
             <a id="downloadButton" download="yuklenen_resim.png">Resmi İndir</a>
         </div>
-        <a id="reportLink" href="#">Bu resmi bildir</a>
     </main>
     <footer>
         <div>Okan tarafından yapıldı.</div>
     </footer>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var pathname = window.location.pathname;
-            var elta = document.getElementById("tarih");
-            var short1 = pathname.split('/').pop();
-            var short_key = "";
-            var urla = "https://fastimg.pythonanywhere.com/get_blob_id?short=";
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var pathname = window.location.pathname;
+        var elta=document.getElementById("tarih")
+        var short1 = pathname.split('/').pop();
+        var short_key = "";
+        var urla = "https://fastimg.pythonanywhere.com/get_blob_id?short=";
 
-            // Kullanıcının gerçek IP adresini almak için ipinfo.io API'ye istek gönder
-            fetch("https://ipinfo.io/json")
-                .then(response => response.json())
-                .then(data => {
-                    var userIp = data.ip;
+        fetch(urla + short1)
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Hata: ' + response.statusText);
+                }
+            })
+            .then(data => {
+                short_key = data.data;
+                
+                var apiUrl = `https://jsonblob.com/api/jsonBlob/${short_key}`;
 
-                    fetch(urla + short1)
-                        .then(response => {
-                            if (response.ok) {
-                                return response.json();
-                            } else {
-                                throw new Error('Hata: ' + response.statusText);
-                            }
-                        })
-                        .then(data => {
-                            short_key = data.data;
-
-                            var apiUrl = `https://jsonblob.com/api/jsonBlob/${short_key}`;
-
-                            fetch(apiUrl)
-                                .then(response => {
-                                    if (response.ok) {
-                                        return response.json();
-                                    } else {
-                                        throw new Error('Hata: ' + response.statusText);
-                                    }
-                                })
-                                .then(data => {
-                                    var base64Content = data.content;
-                                    var filename = data.name;
-                                    var filename1 = document.getElementById("filename");
-                                    document.title = "FastIMG - " + filename;
-                                    filename1.innerHTML = "Resim İsmi: " + filename;
-                                    elta.innerHTML = "Yüklenme tarihi: " + data.date;
-                                    var imgElement = document.getElementById('uploadedImage');
-                                    imgElement.src = `data:image/png;base64,${base64Content}`;
-
-                                    var downloadButton = document.getElementById('downloadButton');
-                                    downloadButton.href = `data:image/png;base64,${base64Content}`;
-                                    downloadButton.onclick = function () {
-                                        downloadButton.download = filename;
-                                    };
-
-                                    var reportLink = document.getElementById('reportLink');
-                                    reportLink.addEventListener('click', function () {
-                                        var reportSubject = prompt('Lütfen şikayet konusunu girin:');
-                                        if (reportSubject !== null) {
-                                            // Şikayet bilgilerini API'ye gönder
-                                            sendReportData(short_key, reportSubject, userIp);
-                                        }
-                                    });
-                                })
-                                .catch(error => {
-                                    console.error("Hata:", error);
-                                });
-                        })
-                        .catch(error => {
-                            console.error("Hata:", error);
-                        });
-                })
-                .catch(error => {
-                    console.error("IP Adresi Alınamadı:", error);
-                });
-
-            function sendReportData(blobId, reportSubject, userIp) {
-                var reportApiUrl = "https://fastimg.pythonanywhere.com/report";
-                var reportData = {
-                    id: blobId,
-                    con: reportSubject,
-                    ip: userIp
-                };
-
-                fetch(reportApiUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(reportData),
-                })
+                fetch(apiUrl)
                     .then(response => {
                         if (response.ok) {
-                            alert('Teşekkür ederiz! Şikayetiniz alınmıştır. Lütfen gereksiz şikayetlerde bulunmamaya özen gösterin. Şikayetleriniz IP adresinizle birlikte kaydedilmektedir.');
+                            return response.json();
                         } else {
                             throw new Error('Hata: ' + response.statusText);
                         }
                     })
+                    .then(data => {
+                        var base64Content = data.content;
+                        var filename = data.name;
+                        var filename1 = document.getElementById("filename");
+                        document.title="FastIMG - "+filename
+                        filename1.innerHTML = "Resim İsmi: " + filename;
+                        elta.innerHTML="Yüklenme tarihi: "+data.date
+                        var imgElement = document.getElementById('uploadedImage');
+                        imgElement.src = `data:image/png;base64,${base64Content}`;
+
+                        var downloadButton = document.getElementById('downloadButton');
+                        downloadButton.href = `data:image/png;base64,${base64Content}`;
+                        downloadButton.onclick = function() {
+                            downloadButton.download = filename;
+                        };
+                    })
                     .catch(error => {
                         console.error("Hata:", error);
-                        alert('Şikayet gönderilirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.');
                     });
-            }
-        });
-    </script>
+            })
+            .catch(error => {
+                console.error("Hata:", error);
+            });
+    });
+</script>
 </body>
 </html>
