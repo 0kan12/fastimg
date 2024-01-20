@@ -72,6 +72,7 @@
     </header>
     <main>
         <div id="loadingMessage">Resim Yükleniyor...</div>
+        <div id="errorMessage" style="display: none; color: red;"></div>
         <img id="uploadedImage" alt="Yüklenen Resim" src="" />
         <div id="downloadContainer">
             <a id="downloadButton" download="yuklenen_resim.png">Resmi İndir</a>
@@ -80,67 +81,78 @@
     <footer>
         <div>Okan tarafından yapıldı.</div>
     </footer>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var pathname = window.location.pathname;
-            var elta = document.getElementById("tarih");
-            var short1 = pathname.split('/').pop();
-            var short_key = "";
-            var urla = "https://fastimg.pythonanywhere.com/get_blob_id?short=";
-
-            fetch(urla + short1)
-                .then(response => {
-                    if (response.ok) {
-                        return response.json();
-                    } else {
-                        throw new Error('Hata: ' + response.statusText);
-                    }
-                })
-                .then(data => {
-                    short_key = data.data;
-
-                    var apiUrl = `https://jsonblob.com/api/jsonBlob/${short_key}`;
-
-                    fetch(apiUrl)
-                        .then(response => {
-                            if (response.ok) {
-                                return response.json();
-                            } else {
-                                throw new Error('Hata: ' + response.statusText);
-                            }
-                        })
-                        .then(data => {
-                            var base64Content = data.content;
-                            var filename = data.name;
-
-                            var filename1 = document.getElementById("filename");
-                            document.title = "FastIMG - " + filename;
-                            filename1.innerHTML = "Resim İsmi: " + filename;
-                            elta.innerHTML = "Yüklenme tarihi: " + data.date;
-
-                            var imgElement = document.getElementById('uploadedImage');
-                            imgElement.src = `data:image/png;base64,${base64Content}`;
-
-                            var downloadButton = document.getElementById('downloadButton');
-                            downloadButton.href = `data:image/png;base64,${base64Content}`;
-                            downloadButton.onclick = function() {
-                                downloadButton.download = filename;
-                            };
-
-                            imgElement.style.display = 'block';
-                            downloadButton.style.display = 'block';
-                            document.getElementById('loadingMessage').style.display = 'none';
-                        })
-                        .catch(error => {
-                            console.error("Hata:", error);
-                        });
-                })
-                .catch(error => {
-                    console.error("Hata:", error);
-                    document.getElementById('loadingMessage').innerHTML = 'Resim bulunamadı.';
-                    document.getElementById('loadingMessage').style.color = 'red';
-                });
-        });
-    </script>
+    
 </body>
 </html>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var pathname = window.location.pathname;
+        var elta = document.getElementById("tarih");
+        var loadingMessage = document.getElementById('loadingMessage');
+        var errorMessage = document.getElementById('errorMessage');
+        var short1 = pathname.split('/').pop();
+        var short_key = "";
+        var urla = "https://fastimg.pythonanywhere.com/get_blob_id?short=";
+
+        fetch(urla + short1)
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Hata: ' + response.statusText);
+                }
+            })
+            .then(data => {
+                short_key = data.data;
+
+                if (short_key === "error") {
+                    throw new Error('Hata: Resim bulunamadı.');
+                }
+
+                var apiUrl = `https://jsonblob.com/api/jsonBlob/${short_key}`;
+
+                fetch(apiUrl)
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error('Hata: ' + response.statusText);
+                        }
+                    })
+                    .then(data => {
+                        var base64Content = data.content;
+                        var filename = data.name;
+
+                        var filename1 = document.getElementById("filename");
+                        document.title = "FastIMG - " + filename;
+                        filename1.innerHTML = "Resim İsmi: " + filename;
+                        elta.innerHTML = "Yüklenme tarihi: " + data.date;
+
+                        var imgElement = document.getElementById('uploadedImage');
+                        imgElement.src = `data:image/png;base64,${base64Content}`;
+
+                        var downloadButton = document.getElementById('downloadButton');
+                        downloadButton.href = `data:image/png;base64,${base64Content}`;
+                        downloadButton.onclick = function() {
+                            downloadButton.download = filename;
+                        };
+
+                        imgElement.style.display = 'block';
+                        downloadButton.style.display = 'block';
+                        loadingMessage.style.display = 'none';
+                    })
+                    .catch(error => {
+                        console.error("Hata:", error);
+                        loadingMessage.style.display = 'none';
+                        errorMessage.innerHTML = 'Resim bulunamadı.';
+                        errorMessage.style.display = 'block';
+                    });
+            })
+            .catch(error => {
+                console.error("Hata:", error);
+                loadingMessage.style.display = 'none';
+                errorMessage.innerHTML = 'Resim bulunamadı.';
+                errorMessage.style.display = 'block';
+            });
+    });
+</script>
