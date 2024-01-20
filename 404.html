@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>FastIMG</title>
     <style>
+        @import url('https://fonts.googleapis.com/css?family=Raleway:400,700');
         body {
             display: flex;
             align-items: center;
@@ -11,7 +12,7 @@
             flex-direction: column;
             height: 100vh;
             margin: 0;
-            font-family: Arial, sans-serif;
+            font-family: "RaleWay", sans-serif;
         }
 
         header {
@@ -31,6 +32,7 @@
 
         #loadingMessage {
             margin-bottom: 10px;
+            font-size: 24px;
         }
 
         #uploadedImage {
@@ -62,6 +64,11 @@
             right: 0;
             background: #f1f1f1;
             padding: 10px;
+        }
+        #errorMessage {
+            display: none;
+            color: red;
+            font-size: 24px;
         }
     </style>
 </head>
