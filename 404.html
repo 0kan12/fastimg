@@ -11,8 +11,8 @@
         <h5 id="tarih"></h5>
     </header>
     <main>
-        <div class="content"><div class="circle"></div><div class="circle"></div><div class="circle"></div><div class="circle"></div>
-          </div>
+        
+        <div id="loadingMessage"></div>
         <div id="errorMessage" style="display: none; color: red;"></div>
         <img id="uploadedImage" alt="Yüklenen Resim" src="" />
         <div id="downloadContainer">
@@ -29,7 +29,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         var pathname = window.location.pathname;
         var elta = document.getElementById("tarih");
-        var loadingMessage = document.getElementById('content');
+        var loadingMessage = document.getElementById('loadingMessage');
         var errorMessage = document.getElementById('errorMessage');
         var short1 = pathname.split('/').pop();
         var short_key = "";
