@@ -3,74 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>FastIMG</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css?family=Raleway:400,700');
-        body {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            height: 100vh;
-            margin: 0;
-            font-family: "RaleWay", sans-serif;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        h2 {
-            text-align: center;
-        }
-
-        main {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        #loadingMessage {
-            margin-bottom: 10px;
-            font-size: 24px;
-        }
-
-        #uploadedImage {
-            max-height: 400px;
-            max-width: 400px;
-            height: auto;
-            margin-bottom: 10px;
-            display: none;
-        }
-
-        #downloadContainer {
-            margin-top: 20px;
-        }
-
-        #downloadButton {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: #fff;
-            text-decoration: none;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            display: none;
-        }
-
-        footer {
-            position: fixed;
-            bottom: 0;
-            right: 0;
-            background: #f1f1f1;
-            padding: 10px;
-        }
-        #errorMessage {
-            display: none;
-            color: red;
-            font-size: 24px;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
@@ -78,7 +11,8 @@
         <h5 id="tarih"></h5>
     </header>
     <main>
-        <div id="loadingMessage">Resim Yükleniyor...</div>
+        <div class="content"><div class="circle"></div><div class="circle"></div><div class="circle"></div><div class="circle"></div>
+          </div>
         <div id="errorMessage" style="display: none; color: red;"></div>
         <img id="uploadedImage" alt="Yüklenen Resim" src="" />
         <div id="downloadContainer">
