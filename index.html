@@ -3,87 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>FastIMG</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css?family=Raleway:400,700');
-        body {
-            font-family: "RaleWay", sans-serif;
-            max-width: 400px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #f4f4f4;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
-        h2 {
-            color: #333;
-        }
-
-        form {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        input {
-            margin-bottom: 10px;
-        }
-
-        button {
-            font-family: "RaleWay", sans-serif;
-            background-color: #4caf50;
-            color: #fff;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        #result {
-            display: none;
-            font-family: "RaleWay", sans-serif;
-            margin-top: 20px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #fff;
-        }
-
-        #copyButton {
-            display: none;
-            background-color: #3498db;
-            color: #fff;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        #custom-file-button {
-            background-color: #3498db;
-            color: #fff;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            display: inline-block;
-        }
-
-        #loadingLabel {
-            display: none;
-            margin-top: 10px;
-            color: #333;
-            font-weight: bold;
-        }
-        #file-label {
-            font-size: 1em;
-            margin-bottom: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="styles2.css">
 </head>
 <body>
     <h2>Resim Yükleme</h2>
@@ -105,9 +25,6 @@
     <div id="result"></div>
     <h6>Bu hizmeti kullanarak <a target="_blank" href="https://dvtfl.xyz/tos">kullanım koşullarımızı</a> kabul etmiş olursunuz</h6>
     <button id="copyButton" onclick="copyLink()" title="Linki Kopyala">Linki Kopyala 🔗</button>
-    <footer style="position: fixed; bottom: 0; right: 0; background: #f1f1f1; padding: 10px;">
-        <div>Okan tarafından yapıldı.</div>
-    </footer>
     <script>
         const fileInput = document.getElementById('file-input');
         const fileLabel = document.getElementById('file-label');

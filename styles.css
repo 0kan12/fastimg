@@ -6,9 +6,21 @@
               flex-direction: column;
               height: 100vh;
               margin: 0;
+              padding: 0;
               font-family: "RaleWay", sans-serif;
           }
-  
+          footer {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        footer a {
+            color: #fff;
+        }
           header {
               text-align: center;
               margin-bottom: 20px;
@@ -63,14 +75,6 @@
               border-radius: 5px;
               cursor: pointer;
               display: none;
-          }
-  
-          footer {
-              position: fixed;
-              bottom: 0;
-              right: 0;
-              background: #f1f1f1;
-              padding: 10px;
           }
           #errorMessage {
               display: none;
