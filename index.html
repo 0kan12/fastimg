@@ -53,7 +53,7 @@
         });
 
         function uploadToServer(content, name) {
-            fetch('/new_img_link', {
+            fetch('https://fastimg.pythonanywhere.com/new_img_link', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
