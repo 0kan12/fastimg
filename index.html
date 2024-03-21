@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>FastIMG</title>
+    <title>Resim Yükleme</title>
     <link rel="stylesheet" href="styles2.css">
 </head>
 <body>
@@ -13,7 +13,7 @@
                 <label for="file-input" id="custom-file-button">
                     Dosya Seç
                 </label>
-                <input type="file" id="file-input"  accept=".png,.jpg,.jpeg" name="file" style="display: none;">
+                <input type="file" id="file-input" accept=".png,.jpg,.jpeg" name="file" style="display: none;">
                 <div id="file-label">Dosya Seçilmedi</div>
             </div>
             <div style="width: 48%; text-align: right;">
@@ -33,10 +33,10 @@
             const fileName = this.value.split('\\').pop();
             fileLabel.innerHTML = fileName !== '' ? `Seçilen Dosya: ${fileName}` : 'Dosya Seçilmedi';
         });
+
         document.getElementById('uploadButton').addEventListener('click', function() {
             var fileInput = document.getElementById('file-input');
             var file = fileInput.files[0];
-            var name = file.name;
             if (file) {
                 document.getElementById('loadingLabel').style.display = 'block';
 
@@ -45,60 +45,46 @@
 
                 reader.onload = function() {
                     var base64Content = reader.result.split(',')[1];
-                    uploadToJSONBlob(base64Content, name);
+                    uploadToServer(base64Content, file.name);
                 };
             } else {
                 alert('Lütfen bir resim seçin.');
             }
         });
 
-        function uploadToJSONBlob(content, name) {
-            var apiUrl = 'https://jsonblob.com/api/jsonBlob';
-            var urla='https://fastimg.pythonanywhere.com/new_img_link?id='
-            var bugununTarihi = new Date().toLocaleString('tr-TR', { day: 'numeric', month: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' });
-            console.log(bugununTarihi);
-            var jsonData = { "content": content, "name": name ,"date":bugununTarihi};
-
-            fetch(apiUrl, {
+        function uploadToServer(content, name) {
+            fetch('/new_img_link', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(jsonData)
+                body: JSON.stringify({
+                    content: content,
+                    name: name
+                })
             })
             .then(response => {
                 if (response.ok) {
-                    var blobId = response.headers.get('Location').split('/').pop();
-                    console.log("JSONBlob ID:", blobId);
-                    fetch(urla+blobId,{
-                        method: 'GET',
-                    }).then(response=>{
-                        if (response.ok) {
-                            return response.json();
-                        } else {
-                            throw new Error('Hata: ' + response.statusText);
-                        }
-                    }).then(data=>{
-                        short=data.data;
-                        updateResult(short);
-                    })
-                    
+                    return response.json();
                 } else {
                     throw new Error('Hata: ' + response.statusText);
                 }
+            })
+            .then(data => {
+                updateResult(data);
             })
             .catch(error => {
                 document.getElementById('result').innerHTML = 'Hata oluştu: ' + error.message;
             });
         }
 
-        function updateResult(blobId) {
+        function updateResult(data) {
             var resultElement = document.getElementById('result');
-            resultElement.innerHTML = 'Resim başarıyla yüklendi. <br> Linkiniz: <a href="https://fastimg.creativestudioss.online/' + blobId + '" target="_blank">https://fastimg.creativestudioss.online/' + blobId + '</a> <br>';
-            resultElement.innerHTML += "QrCode oluşturmak için : <a target='_black' href=https://qrgen.creativestudioss.online?data=https://fastimg.creativestudioss.online/" + blobId + ">Tıklayın</a>";
-            resultElement.innerHTML += '<br> Linki kopyalamak için "Linki Kopyala" butonunu kullanabilirsiniz.';
-            document.getElementById('copyButton').style.display = 'block';
-            resultElement.style.display="block"
+            if (data.success) {
+                resultElement.innerHTML = 'Resim başarıyla yüklendi. <br> Linkiniz: <a href="' + data.link + '" target="_blank">' + data.link + '</a>';
+            } else {
+                resultElement.innerHTML = 'Hata oluştu: ' + data.error;
+            }
             document.getElementById('loadingLabel').style.display = 'none';
         }
 
