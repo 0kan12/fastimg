@@ -85,6 +85,8 @@
             } else {
                 resultElement.innerHTML = 'Hata oluştu: ' + data.error;
             }
+            document.getElementById('loadingLabel').style.display = 'none';
+            resultElement.style.display = 'block';
         }
 
         function copyLink() {
